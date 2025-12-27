@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modu"
+version = "0.0.1"
+authors = [
+    { name="Pierre Denis", email="pie.denis@skynet.be" },
+]
+description = "Advanced modular arithmetic in Python"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Mathematics"
+]
+
+[project.urls]
+Homepage = "https://your-website-or-repo-url"
+"Bug Tracker" = "https://your-website-or-repo-url/issues"
+
+[tool.setuptools]
+py-modules = ["modu"]
