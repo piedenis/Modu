@@ -273,7 +273,7 @@ class Modu:
                                          for row in rows)
                 nb_cols = len(self._residues)
                 out = f"\\begin{{array}}\n" \
-                      f"{{{'|'.join("c" for _ in range(nb_cols))}}}\n" \
+                      f"{{{'|'.join('c' for _ in range(nb_cols))}}}\n" \
                       f"{table_header_str}\\\\\n" \
                       f"\\hline\\hline\n" \
                       f"{rows_str}\n" \
