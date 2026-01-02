@@ -24,4 +24,5 @@ Homepage = "https://github.com/piedenis/Modu"
 "Bug Tracker" = "https://github.com/piedenis/Modu/issues"
 
 [tool.setuptools]
-py-modules = ["src.modu"]
+package-dir = {"" = "src"}
+py-modules = ["modu"]
