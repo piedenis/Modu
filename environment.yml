@@ -1,0 +1,4 @@
+name: modu
+dependencies:
+  - python
+  - pip
