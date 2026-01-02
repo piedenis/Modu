@@ -1,4 +1,4 @@
 name: modu
-dependencies:
-  - python
+Fix dependencies:
+  - python>=3.9
   - pip
