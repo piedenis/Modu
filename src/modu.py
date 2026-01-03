@@ -23,12 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from __future__ import annotations
 import operator
 import inspect
 from itertools import zip_longest, product
 from math import gcd, lcm
 from typing import Iterable, Iterator, Any, Callable
-from __future__ import annotations
 
 
 class ModuError(Exception):
