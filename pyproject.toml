@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "modu"
-version = "0.0.2"
+version = "0.1.0"
 authors = [
     { name="Pierre Denis", email="pie.denis@skynet.be" },
 ]
-description = "Advanced modular arithmetic in Python"
+description = "Modular arithmetic in Python"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",

@@ -1,6 +1,6 @@
-**Modu** is a module for doing modular arithmetic in Python. It is in essence a "domain-specific language" (DSL) dedicated to modular arithmetic. Modu is best used as an interactive calculator in Python terminal sessions (REPL) or in Jupyter Notebooks with instantaneous rendering as LaTeX formulas. Modu can be used as well in your Python scripts to ease calculations involving modular arithmetic. The prime target domain is research and education in number theory.
+**Modu** is a mathematical module for doing modular arithmetic in Python. Using operator overloading, it provides an experience similar to a _domain-specific language_ (DSL). Modu is best used as an interactive calculator in Python terminal sessions (REPL) or in Jupyter Notebooks with instantaneous rendering as LaTeX formulas. Modu can be used as well in your Python scripts to ease calculations involving modular arithmetic. The prime target domain is research and education in number theory.
 
-Modu allows you defining and manipulating sets of residue classes for given moduli. These sets are displayed with usual notations of modular arithmetic, using character strings, like `n ≡ {0, ±2, +3} (mod 6)`. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation). Samples of integers can be obtained, displayed as tables (aligning same residues in same columns) and possibly transforming the elements by user-defined functions.
+**In a nutshell**, Modu allows you defining and manipulating sets of residue classes for given moduli. These sets are displayed with usual notations of modular arithmetic, using character strings, like `n ≡ {0, ±2, +3} (mod 6)` or using LaTeX formula rendering. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation). Samples of integers can be obtained, displayed as tables (aligning same residues in same columns) and possibly transforming the elements by user-defined functions.
 
 Modu is an open-source module distributed under the **MIT license**.
 
@@ -21,7 +21,7 @@ Here are few examples.
 >>> ~(O%2 | O%3)
 ±1 (mod 6)
 ```
-* testing whether 15 and 23 belongs to the previous set (note: any prime numbers greater or equal to 5 belongs to this set):
+* testing whether 15 and 23 belong to the previous set (note: any prime number greater or equal to 5 belongs to this set!):
 ```
 >>> 15 in ~(O%2 | O%3)
 False
@@ -44,4 +44,8 @@ True
 ```
 Modu provides more functions for normalizing the representation, changing the display format or providing samples using table layout.
 
-All those features are demonstrated in an interactive tutorial, the "**Modutorial**" Jupyter Notebook (modutorial.ipynb).
+All those features are demonstrated in an interactive tutorial, the **"_Modutorial_" Jupyter Notebook** (modutorial.ipynb)**. This can be opened directly online by clicking here (binder):
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/piedenis/Modu/HEAD?urlpath=%2Fdoc%2Ftree%2Fsrc%2Fmodutorial.ipynb)
+
+(be patient: you have to wait a bit...)

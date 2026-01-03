@@ -30,6 +30,7 @@ from itertools import zip_longest, product
 from math import gcd, lcm
 from typing import Iterable, Iterator, Any, Callable
 
+__version__ = "0.1.0"
 
 class ModuError(Exception):
     pass
