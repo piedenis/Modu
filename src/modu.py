@@ -23,12 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from __future__ import annotations
 import operator
 import inspect
 from itertools import zip_longest, product
 from math import gcd, lcm
 from typing import Iterable, Iterator, Any, Callable
+from __future__ import annotations
 
 
 class ModuError(Exception):
@@ -64,13 +64,17 @@ class Modu:
     # function to apply to output table elements or None to use default
     _table_func: Callable[[int], Any] | None
 
-    __FORMAT_CODES = frozenset("Llistpm+-:0123456789")
-
-    default_latex_format = "L"
-
+    # default display format used in text environments (terminal)
     default_str_format = "s"
 
+    # default display format used in LaTeX environment of Jupyter Notebook
+    default_latex_format = "L"
+
+    # default number of rows for table output format
     default_table_end = 10
+
+    # allowed format codes
+    __FORMAT_CODES = frozenset("Llistpm+-:0123456789")
 
     @staticmethod
     def build(modulus: int | None=None, residues: Iterable[int] | None=None, name: str | None=None,
