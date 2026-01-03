@@ -1,6 +1,6 @@
 **Modu** is a module for doing modular arithmetic in Python. It is in essence a "domain-specific language" (DSL) dedicated to modular arithmetic. Modu is best used as an interactive calculator in Python terminal sessions (REPL) or in Jupyter Notebooks with instantaneous rendering as LaTeX formulas. Modu can be used as well in your Python scripts to ease calculations involving modular arithmetic. The prime target domain is research and education in number theory.
 
-Modu allows you defining and manipulating sets of residue classes for given moduli. These sets are displayed with usual notations of modular arithmetic, using character strings, like `n ≡ {0, ±2, +3} (mod 6)`. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation).
+Modu allows you defining and manipulating sets of residue classes for given moduli. These sets are displayed with usual notations of modular arithmetic, using character strings, like `n ≡ {0, ±2, +3} (mod 6)`. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation). Samples of integers can be obtained, displayed as tables (aligning same residues in same columns) and possibly transforming the elements by user-defined functions.
 
 Modu is an open-source module distributed under the **MIT license**.
 
