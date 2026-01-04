@@ -42,7 +42,7 @@ class Modu:
         in, not in operators).
         A Modu instance has the following attributes:
         * _modulus: integer modulus >= 1 or None to represent a finite subset of integers
-        * _residues: tuple of integers giving, if _m is not None, the representative residues in the range [0, _m - 1]
+        * _residues: tuple of integers giving, if _modulus is not None, the representative residues in the range [0, _m - 1]
         * _name: string giving a name to the instance or None if no name is given
         * _format_spec: string giving output format specification
         * _table_func: function to apply to output table elements or None to use default

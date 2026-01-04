@@ -44,7 +44,7 @@ True
 ```
 Modu provides more functions for normalizing the representation, changing the display format or providing samples using table layout.
 
-All those features are demonstrated in an interactive tutorial, the **"_Modutorial_" Jupyter Notebook** (modutorial.ipynb)**. This can be opened directly online by clicking here (binder):
+All those features are demonstrated in an interactive tutorial, the **"_Modutorial_" Jupyter Notebook** (modutorial.ipynb). This can be opened directly online by clicking here (binder):
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/piedenis/Modu/HEAD?urlpath=%2Fdoc%2Ftree%2Fsrc%2Fmodutorial.ipynb)
 
