@@ -1,4 +1,3 @@
-
 """
 MIT License
 
@@ -68,16 +67,16 @@ class Modu:
     _table_func: Callable[[int], Any] | None
 
     # default display format used in text environments (terminal)
-    default_str_format = "s"
+    default_str_format: str = "s"
 
     # default display format used in LaTeX environment of Jupyter Notebook
-    default_latex_format = "L"
+    default_latex_format: str = "L"
 
     # default number of rows for table output format
-    default_table_end = 10
+    default_table_end: int = 10
 
     # allowed format codes
-    __FORMAT_CODES = frozenset("Llistpm+-:0123456789")
+    __FORMAT_CODES: frozenset = frozenset("Llistpm+-:0123456789")
 
     @staticmethod
     def build(modulus: int | None = None, residues: Iterable[int] | None = None, name: str | None = None,
