@@ -30,7 +30,8 @@ from itertools import zip_longest, product
 from math import gcd, lcm
 from typing import Iterable, Iterator, Any, Callable
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
+
 
 class ModuError(Exception):
     pass
@@ -42,7 +43,8 @@ class Modu:
         in, not in operators).
         A Modu instance has the following attributes:
         * _modulus: integer modulus >= 1 or None to represent a finite subset of integers
-        * _residues: tuple of integers giving, if _modulus is not None, the representative residues in the range [0, _m - 1]
+        * _residues: tuple of integers giving, if _modulus is not None, the representative residues in the range
+                     [0, _modulus - 1]
         * _name: string giving a name to the instance or None if no name is given
         * _format_spec: string giving output format specification
         * _table_func: function to apply to output table elements or None to use default
@@ -51,7 +53,7 @@ class Modu:
     __slots__ = ('_modulus', '_residues', '_name', '_format_spec', '_table_func')
 
     # integer modulus >= 1  or None to represent a finite subset of integers
-    _modulus : int | None
+    _modulus: int | None
 
     # tuple of integers giving, if _m is not None, the representative residues in the range [0, _m - 1]
     _residues: tuple[int, ...]
@@ -78,8 +80,8 @@ class Modu:
     __FORMAT_CODES = frozenset("Llistpm+-:0123456789")
 
     @staticmethod
-    def build(modulus: int | None=None, residues: Iterable[int] | None=None, name: str | None=None,
-              format_spec: str="", table_func: Callable[[int], Any] | None=None) -> Modu:
+    def build(modulus: int | None = None, residues: Iterable[int] | None = None, name: str | None = None,
+              format_spec: str = "", table_func: Callable[[int], Any] | None = None) -> Modu:
         if modulus is not None and (not isinstance(modulus, int) or modulus <= 0):
             raise ModuError(f"invalid modulus {modulus}: expected strictly positive integer or None for no modulus")
         if residues is None:
@@ -95,8 +97,8 @@ class Modu:
         _ = Modu.__decode_format_spec(format_spec)
         return Modu(modulus, residues, name, format_spec, table_func)
 
-    def __init__(self, modulus: int | None, residues: Iterable[int] | None, name: str | None=None,
-                 format_spec: str="", table_func: Callable[[int], Any] | None=None) -> None:
+    def __init__(self, modulus: int | None, residues: Iterable[int] | None, name: str | None = None,
+                 format_spec: str = "", table_func: Callable[[int], Any] | None = None) -> None:
         self._modulus = modulus
         if modulus is not None:
             residues = (r % modulus for r in residues)
@@ -107,26 +109,26 @@ class Modu:
 
     def normalized(self) -> Modu:
         # attempt to normalize using a divisor of m as modulus
-        m = self._modulus
-        rs = self._residues
-        if m is not None:
-            if len(rs) >= 2:
-                for m1 in range(1, m//2+1):
-                    if m % m1 == 0:
+        modulus = self._modulus
+        residues = self._residues
+        if modulus is not None:
+            if len(residues) >= 2:
+                for modulus1 in range(1, modulus//2+1):
+                    if modulus % modulus1 == 0:
                         if all(r1 == r2
-                               for (r1,r2) in zip_longest(rs,
-                                                          (b+r for b in range(0, m, m1)
-                                                               for r in rs if r < m1))):
-                            m = m1
-                            rs = tuple(r for r in rs if r < m1)
+                               for (r1, r2) in zip_longest(residues,
+                                                           (b+r for b in range(0, modulus, modulus1)
+                                                                for r in residues if r < modulus1))):
+                            modulus = modulus1
+                            residues = tuple(r for r in residues if r < modulus1)
                             break
-            if len(rs) == 0:
-                m = 1
-        if m == self._modulus:
+            if len(residues) == 0:
+                modulus = 1
+        if modulus == self._modulus:
             return self
-        return Modu(m, rs, self._name, self._format_spec)
+        return Modu(modulus, residues, self._name, self._format_spec)
 
-    def residues(self, is_plus_form:bool=False) -> Iterable[int]:
+    def residues(self, is_plus_form: bool = False) -> Iterable[int]:
         if is_plus_form or self._modulus is None:
             return self._residues
         m2 = self._modulus // 2
@@ -135,7 +137,7 @@ class Modu:
     def __iter__(self) -> Iterator[int]:
         return iter(self.residues())
 
-    def gen_expand(self, start:int=0, end:int=1) -> Iterator[int]:
+    def gen_expand(self, start: int = 0, end: int = 1) -> Iterator[int]:
         if self._modulus is None:
             if start != 0 or end != 1:
                 raise ModuError(f"without modulus, expansion of residues requires start=0 and end=1")
@@ -145,7 +147,7 @@ class Modu:
                 for r in self._residues:
                     yield b + r
 
-    def gen_expand_table(self, start:int=0, end:int=1, is_plus_form:bool=True) -> Iterator[Iterator[int]]:
+    def gen_expand_table(self, start: int = 0, end: int = 1, is_plus_form: bool = True) -> Iterator[Iterator[int]]:
         if self._modulus is None:
             if start != 0 or end != 1:
                 raise ModuError(f"without modulus, expansion of residues requires start=0 and end=1")
@@ -155,10 +157,11 @@ class Modu:
             for b in range(start*self._modulus, end * self._modulus, self._modulus):
                 yield (b+r for r in rs)
 
-    def expand_table_str(self, start:int=0, end:int=1, is_plus_form:bool=True) -> tuple[tuple[str,...],...]:
+    def expand_table_str(self, start: int = 0, end: int = 1, is_plus_form: bool = True) -> tuple[tuple[str, ...], ...]:
         f = str
         if self._table_func is not None:
-            g = lambda  r: str(self._table_func(r))
+            def g(r):
+                return str(self._table_func(r))
             if 'l' in self._format_spec or 'L' in self._format_spec:
                 def f(r):
                     a = g(r)
@@ -170,17 +173,17 @@ class Modu:
         return tuple(tuple(f(r) for r in it)
                      for it in self.gen_expand_table(start, end, is_plus_form))
 
-    def expand(self, start:int=0, end:int=1) -> Modu:
+    def expand(self, start: int = 0, end: int = 1) -> Modu:
         return Modu(None, (self.gen_expand(start, end)))
 
     def gen_complement_residues(self) -> Iterator[int]:
         return (r for r in self.all_residues() if r not in self._residues)
 
     @staticmethod
-    def __str_residue(r:int) -> str:
+    def __str_residue(r: int) -> str:
         return ('+' if r > 0 else '') + str(r)
 
-    def get_name(self) -> str|None :
+    def get_name(self) -> str | None:
         if self._name is not None:
             return self._name
         frame = inspect.currentframe()
@@ -192,10 +195,10 @@ class Modu:
             frame = frame.f_back
         return None
 
-    def __gen_str_residues(self, is_plus_form:bool, is_minus_form:bool, latex:bool) -> Iterator[str]:
+    def __gen_str_residues(self, is_plus_form: bool, is_minus_form: bool, latex: bool) -> Iterator[str]:
         if is_plus_form ^ is_minus_form:
             rs_iter = self if is_minus_form else self._residues
-            str_rs = ('0' if r == 0 else f"{r:+d}" for r in rs_iter)
+            str_rs = ('0' if r == 0 else f"{r: +d}" for r in rs_iter)
         else:
             if latex:
                 pm_char = "\\pm"
@@ -218,21 +221,21 @@ class Modu:
                         if self._modulus-r in self._residues and (self._modulus % 2 == 1 or r != m2):
                             rs_with_signs.append((r, pm_char))
                         else:
-                            rs_with_signs.append((r, '+' if r>0 else ''))
+                            rs_with_signs.append((r, '+' if r > 0 else ''))
                     elif self._modulus-r not in self._residues:
                         rs_with_signs.append((self._modulus - r, '-'))
-            str_rs = (f"{s}{r}" for (r,s) in sorted(rs_with_signs))
+            str_rs = (f"{s}{r}" for (r, s) in sorted(rs_with_signs))
         return str_rs
 
     @staticmethod
-    def __decode_format_spec(format_spec:str) -> tuple[bool, bool, bool, bool, bool, bool, int, int]:
+    def __decode_format_spec(format_spec: str) -> tuple[bool, bool, bool, bool, bool, bool, int, int]:
         if not isinstance(format_spec, str):
             raise ModuError(f"the format specification requires a string with format codes among "
                             f"{sorted(Modu.__FORMAT_CODES)}")
         unknown_codes = frozenset(format_spec) - Modu.__FORMAT_CODES
         if len(unknown_codes) > 0:
-            raise ModuError(f"Unknown format specification '{next(iter(unknown_codes))}': requires format code(s) among "
-                            f"{sorted(Modu.__FORMAT_CODES)}")
+            raise ModuError(f"Unknown format specification '{next(iter(unknown_codes))}': "
+                            f"requires format code(s) among {sorted(Modu.__FORMAT_CODES)}")
         is_inverted_form = 'i' in format_spec
         is_short_latex = 'l' in format_spec
         is_big_latex = 'L' in format_spec
@@ -260,11 +263,11 @@ class Modu:
                     except ValueError:
                         raise ModuError(f"invalid table format 't{table_bounds_spec}'") from None
         if (is_inverted_form and is_table_form) or (is_string_format and (is_short_latex or is_big_latex)) \
-            or (is_short_latex and is_big_latex):
+                or (is_short_latex and is_big_latex):
             raise ModuError(f"invalid format specification '{format_spec}'")
         return (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, start, end)
 
-    def __format__(self, format_spec:str) -> str:
+    def __format__(self, format_spec: str) -> str:
         (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, start, end) \
             = Modu.__decode_format_spec(format_spec)
         is_latex_format = is_short_latex or is_big_latex
@@ -289,9 +292,9 @@ class Modu:
                 else:
                     col_width = max(max(len(r) for r in str_residues),
                                     max(len(r) for row in rows for r in row))
-                table_header_str = " ".join(f"{str_residue:>{col_width}}"
+                table_header_str = " ".join(f"{str_residue: >{col_width}}"
                                             for str_residue in str_residues)
-                rows_str = "\n".join(" ".join(f"{str_residue:>{col_width}}" for str_residue in row)
+                rows_str = "\n".join(" ".join(f"{str_residue: >{col_width}}" for str_residue in row)
                                      for row in rows)
                 out = f"mod {self._modulus}\n" \
                       f"{table_header_str}\n" \
@@ -321,7 +324,7 @@ class Modu:
                     equiv_char = "\\equiv"
                     out += f" \\pmod{{{self._modulus}}}"
                 if is_inverted_form:
-                    equiv_char =  "\\not " + equiv_char
+                    equiv_char = "\\not " + equiv_char
             else:
                 if self._modulus is None:
                     equiv_char = '=' if not is_inverted_form else '≠'
@@ -364,7 +367,7 @@ class Modu:
 
     __repr__ = __str__
 
-    def __rshift__(self, other:str|Callable[[int], Any]) -> Modu:
+    def __rshift__(self, other: str | Callable[[int], Any]) -> Modu:
         name = self.get_name()
         if other is None or isinstance(other, str):
             return Modu(self._modulus, self._residues, name, self._format_spec + other, self._table_func)
@@ -380,13 +383,13 @@ class Modu:
             raise ModuError(f"cannot represent result without modulus (infinitely many elements)")       
         return range(self._modulus)
 
-    def _coerce(self, other:Any) -> Modu:
+    def _coerce(self, other: Any) -> Modu:
         if isinstance(other, Modu):
             return other
         return Modu.build(self._modulus, other)
 
     @staticmethod
-    def _prepare_combinatoric(modu1, modu2) -> tuple[int, Iterator[int], Iterator[int]]:
+    def _prepare_combinatorics(modu1, modu2) -> tuple[int, Iterator[int], Iterator[int]]:
         if modu1._modulus is None or modu2._modulus is None:
             modulus = modu1._modulus or modu2._modulus
             m1 = 1
@@ -399,7 +402,7 @@ class Modu:
 
     # set operations
 
-    def __contains__(self, r:int) -> bool:
+    def __contains__(self, r: int) -> bool:
         if self._modulus is not None:
             r = r % self._modulus
         return r in self._residues
@@ -407,12 +410,13 @@ class Modu:
     def __invert__(self) -> Modu:
         return Modu.build(self._modulus, self.gen_complement_residues(), format_spec=self._format_spec)
 
-    def __make_op_set(inv:int, f:Callable[[Any, Any], Any]) -> Callable[[Modu, Any], Modu]:
-        def func(modu1:Modu, modu2:Any) -> Modu:
+    # temporary helper meta-function to create set magic methods below
+    def __make_op_set(inv: int, f: Callable[[Any, Any], Any]) -> Callable[[Modu, Any], Modu]:
+        def func(modu1: Modu, modu2: Any) -> Modu:
             modu2 = modu1._coerce(modu2)
             if inv:
                 (modu1, modu2) = (modu2, modu1)
-            (modulus, rs1_iter, rs2_iter) = Modu._prepare_combinatoric(modu1, modu2)
+            (modulus, rs1_iter, rs2_iter) = Modu._prepare_combinatorics(modu1, modu2)
             return Modu(modulus, f(frozenset(rs1_iter), frozenset(rs2_iter)), format_spec=modu1._format_spec)
         func.__name__ = f.__name__
         r = 'other, self' if inv else 'self, other'
@@ -428,40 +432,43 @@ class Modu:
 
     # arithmetic operations
 
-    def __truediv__(self, other:Any) -> Modu:
+    def __truediv__(self, other: Any) -> Modu:
         return self * self._coerce(other)**-1
 
-    def __rtruediv__(self, other:Any) -> Modu:
+    def __rtruediv__(self, other: Any) -> Modu:
         return self._coerce(other) * self**-1
 
-    def __pow__(self, other:Any) -> Modu:
+    def __pow__(self, other: Any) -> Modu:
         if not isinstance(other, int):
             raise ModuError(f"power value shall be an integer")
         if self._modulus is None and other < 0:
             raise ModuError(f"without modulus, the power shall be a non-negative integer")
         try:
-            return Modu(self._modulus, (pow(r, other, self._modulus) for r in self._residues), format_spec=self._format_spec)
+            return Modu(self._modulus,
+                        (pow(r, other, self._modulus) for r in self._residues),
+                        format_spec=self._format_spec)
         except ValueError:
-            m = self._modulus
+            modulus = self._modulus
             r = None
             for r in self._residues:
-                if gcd(r, m) > 1:
+                if gcd(r, modulus) > 1:
                     break
-            raise ModuError(f"cannot find inverse of {r} modulo {m}, because {r} and {m} are not coprime") from None
+            raise ModuError(f"cannot find inverse of {r} modulo {modulus}, because {r} and {modulus} are not coprime") \
+                    from None
 
-    def __eq__(self, other:Any) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Modu):
             raise ModuError(f"cannot compare {type(self).__name__} instance with {type(other).__name__} instance")
         m1 = self.normalized()
         m2 = other.normalized()
         return m1._modulus == m2._modulus and m1._residues == m2._residues
 
-    def __mod__(self, other:int|None) -> Modu:
+    def __mod__(self, other: int | None) -> Modu:
         if self._modulus is None:
             end = 1
         else:
             end = lcm(self._modulus, other) // self._modulus
-        return Modu.build(other, (r1%other for r1 in self.gen_expand(end=end)), format_spec=self._format_spec)
+        return Modu.build(other, (r1 % other for r1 in self.gen_expand(end=end)), format_spec=self._format_spec)
 
     def __pos__(self) -> Modu:
         return self.normalized()
@@ -469,12 +476,13 @@ class Modu:
     def __neg__(self) -> Modu:
         return Modu(self._modulus, (-r for r in self._residues), format_spec=self._format_spec)
 
-    def __make_op_int(inv:int, f:Callable[[int, int], int]) -> Callable[[Modu, Any], Modu]:
-        def func(modu1:Modu, modu2:Any) -> Modu:
+    # temporary helper meta-function to create arithmetic magic methods below
+    def __make_op_int(inv: int, f: Callable[[int, int], int]) -> Callable[[Modu, Any], Modu]:
+        def func(modu1: Modu, modu2: Any) -> Modu:
             modu2 = modu1._coerce(modu2)
             if inv:
                 (modu1, modu2) = (modu2, modu1)
-            (modulus, rs1_iter, rs2_iter) = Modu._prepare_combinatoric(modu1, modu2)
+            (modulus, rs1_iter, rs2_iter) = Modu._prepare_combinatorics(modu1, modu2)
             return Modu(modulus, (f(*r1r2) for r1r2 in product(rs1_iter, rs2_iter)), format_spec=modu1._format_spec)
         func.__name__ = f.__name__
         r = 'other, self' if inv else 'self, other'
@@ -489,6 +497,7 @@ class Modu:
     __rmul__ = __make_op_int(1, operator.mul)
 
     del __make_op_int
+
 
 m = mod = Modu.build
 E = Modu(None, ())
