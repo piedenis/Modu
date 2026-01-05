@@ -141,7 +141,7 @@ class Modu:
             if start != 0 or end != 1:
                 raise ModuError(f"without modulus, expansion of residues requires start=0 and end=1")
             yield from self._residues
-        else: 
+        else:
             for b in range(start*self._modulus, end * self._modulus, self._modulus):
                 for r in self._residues:
                     yield b + r
@@ -197,7 +197,7 @@ class Modu:
     def __gen_str_residues(self, is_plus_form: bool, is_minus_form: bool, latex: bool) -> Iterator[str]:
         if is_plus_form ^ is_minus_form:
             rs_iter = self if is_minus_form else self._residues
-            str_rs = ('0' if r == 0 else f"{r: +d}" for r in rs_iter)
+            str_rs = ('0' if r == 0 else f"{r:+d}" for r in rs_iter)
         else:
             if latex:
                 pm_char = "\\pm"
@@ -291,9 +291,9 @@ class Modu:
                 else:
                     col_width = max(max(len(r) for r in str_residues),
                                     max(len(r) for row in rows for r in row))
-                table_header_str = " ".join(f"{str_residue: >{col_width}}"
+                table_header_str = " ".join(f"{str_residue:>{col_width}}"
                                             for str_residue in str_residues)
-                rows_str = "\n".join(" ".join(f"{str_residue: >{col_width}}" for str_residue in row)
+                rows_str = "\n".join(" ".join(f"{str_residue:>{col_width}}" for str_residue in row)
                                      for row in rows)
                 out = f"mod {self._modulus}\n" \
                       f"{table_header_str}\n" \
