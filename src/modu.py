@@ -76,7 +76,7 @@ class Modu:
     default_table_end: int = 10
 
     # allowed format codes
-    __FORMAT_CODES: frozenset = frozenset("Llistpm+-:0123456789")
+    __FORMAT_CODES: frozenset = frozenset("Llistepm+-:0123456789")
 
     @staticmethod
     def build(modulus: int | None = None, residues: Iterable[int] | None = None, name: str | None = None,
@@ -93,7 +93,7 @@ class Modu:
             raise ModuError("all residues shall be integer")
         if name is not None and (not isinstance(name, str) or len(name) == 0):
             raise ModuError("the name shall be a non-empty string")
-        _ = Modu.__decode_format_spec(format_spec)
+        Modu.__decode_format_spec(format_spec)
         return Modu(modulus, residues, name, format_spec, table_func)
 
     def __init__(self, modulus: int | None, residues: Iterable[int] | None, name: str | None = None,
@@ -227,7 +227,7 @@ class Modu:
         return str_rs
 
     @staticmethod
-    def __decode_format_spec(format_spec: str) -> tuple[bool, bool, bool, bool, bool, bool, int, int]:
+    def __decode_format_spec(format_spec: str) -> tuple[bool, bool, bool, bool, bool, bool, bool, int, int]:
         if not isinstance(format_spec, str):
             raise ModuError(f"the format specification requires a string with format codes among "
                             f"{sorted(Modu.__FORMAT_CODES)}")
@@ -241,6 +241,7 @@ class Modu:
         is_string_format = 's' in format_spec
         is_plus_form = 'p' in format_spec
         is_minus_form = 'm' in format_spec
+        is_expanded_form = 'e' in format_spec
         is_table_form = 't' in format_spec
         if is_table_form and not (is_plus_form | is_minus_form):
             is_minus_form = True
@@ -261,15 +262,28 @@ class Modu:
                         end = int(end_str)
                     except ValueError:
                         raise ModuError(f"invalid table format 't{table_bounds_spec}'") from None
-        if (is_inverted_form and is_table_form) or (is_string_format and (is_short_latex or is_big_latex)) \
+        if ((is_inverted_form or is_expanded_form) and is_table_form)  \
+                or (is_string_format and (is_short_latex or is_big_latex)) \
                 or (is_short_latex and is_big_latex):
             raise ModuError(f"invalid format specification '{format_spec}'")
-        return (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, start, end)
+        return (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_expanded_form,
+                is_table_form, start, end)
 
     def __format__(self, format_spec: str) -> str:
-        (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, start, end) \
-            = Modu.__decode_format_spec(format_spec)
+        (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, is_expanded_form,
+         start, end) = Modu.__decode_format_spec(format_spec)
         is_latex_format = is_short_latex or is_big_latex
+
+        if is_expanded_form and self._modulus is not None:
+            ds = strict_divisors(self._modulus)
+            if len(ds) > 0:
+                inner_modus_iter = (self%d for d in ds)
+                if is_latex_format:
+                    out = "TODO"
+                else:
+                    out = "\n".join(str(modu1) for modu1 in inner_modus_iter)
+                return out
+
         modu1 = ~self if is_inverted_form else self
         str_residues = tuple(modu1.__gen_str_residues(is_plus_form, is_minus_form, is_latex_format))
         if is_table_form:
@@ -496,6 +510,19 @@ class Modu:
     __rmul__ = __make_op_int(1, operator.mul)
 
     del __make_op_int
+
+
+def strict_divisors(n):
+    res = []
+    d = 1
+    for p in range(2,n):
+        while n % p == 0:
+            d *= p
+            n //= p
+        if d > 1:
+            res.append(d)
+            d = 1
+    return res
 
 
 m = mod = Modu.build
