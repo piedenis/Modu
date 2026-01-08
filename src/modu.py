@@ -270,20 +270,30 @@ class Modu:
                 is_table_form, start, end)
 
     def __format__(self, format_spec: str) -> str:
-        (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_table_form, is_expanded_form,
-         start, end) = Modu.__decode_format_spec(format_spec)
+        (is_inverted_form, is_short_latex, is_big_latex, is_plus_form, is_minus_form, is_expanded_form,
+         is_table_form, start, end) = Modu.__decode_format_spec(format_spec)
         is_latex_format = is_short_latex or is_big_latex
-
-        if is_expanded_form and self._modulus is not None:
+        if is_expanded_form:
+            if self._modulus is None:
+                raise ModuError(f"the format 'e' (expanded) requires that a modulus is defined")
+            if len(self._residues) != 1:
+                raise ModuError(f"the format 'e' (expanded) requires exactly one residue")
             ds = strict_divisors(self._modulus)
-            if len(ds) > 0:
-                inner_modus_iter = (self%d for d in ds)
+            if len(ds) > 1:
+                inner_modus = []
+                for d in ds:
+                    inner_modu = self % d
+                    inner_modu._name = self._name
+                    inner_modus.append(inner_modu)
                 if is_latex_format:
-                    out = "TODO"
+                    head = "\\left\\{\\begin{array}{l}"
+                    tail = "\\end{array}\\right."
+                    out = f"$ {head}\n" \
+                          f"{'\\\\\n'.join(modu1._repr_latex_()[1:-1] for modu1 in inner_modus)}\n" \
+                          f" {tail} $"
                 else:
-                    out = "\n".join(str(modu1) for modu1 in inner_modus_iter)
+                    out = "\n".join(str(modu1) for modu1 in inner_modus)
                 return out
-
         modu1 = ~self if is_inverted_form else self
         str_residues = tuple(modu1.__gen_str_residues(is_plus_form, is_minus_form, is_latex_format))
         if is_table_form:
