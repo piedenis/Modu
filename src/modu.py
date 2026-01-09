@@ -288,8 +288,9 @@ class Modu:
                 if is_latex_format:
                     head = "\\left\\{\\begin{array}{l}"
                     tail = "\\end{array}\\right."
+                    body = "\\\\\n".join(modu1._repr_latex_()[1:-1] for modu1 in inner_modus)
                     out = f"$ {head}\n" \
-                          f"{'\\\\\n'.join(modu1._repr_latex_()[1:-1] for modu1 in inner_modus)}\n" \
+                          f"{body}\n" \
                           f" {tail} $"
                 else:
                     out = "\n".join(str(modu1) for modu1 in inner_modus)
