@@ -1,10 +1,8 @@
-**Modu** is a mathematical module for doing modular arithmetic in Python. Using operator overloading, it provides an experience similar to a _domain-specific language_ (DSL). Modu is best used as an interactive calculator in Python terminal sessions (REPL) or in Jupyter Notebooks with instantaneous rendering as LaTeX formulas. Modu can be used as well in your Python scripts to ease calculations involving modular arithmetic. The prime target domain is research and education in number theory.
+**Modu** is a mathematical module for doing modular arithmetic in Python. 
 
-**In a nutshell**, Modu allows you defining and manipulating sets of residue classes for given moduli. These sets are displayed with usual notations of modular arithmetic, using character strings, like `n ≡ {0, ±2, +3} (mod 6)` or using LaTeX formula rendering. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation). Samples of integers can be obtained, displayed as tables (aligning same residues in same columns) and possibly transforming the elements by user-defined functions. Several fundamental results of number theory can be easily illustrated, like the sieve of Erathosthenes, Fermat's little theorem, Chinese remainder theorem, Euler's totient function and Dirichlet's theorem on arithmetic progressions.
+**In a nutshell**, Modu allows you defining sets of residue classes for given moduli. These are displayed with usual notations of modular arithmetic like `n ≡ {0, ±2, +3} (mod 6)` or, in Jupyter Notebooks, with instantaneous LaTeX formula rendering. New sets can be computed from existing ones using set operations (union, intersection, complement), as well as  arithmetic operations (addition, negation, multiplication, division, exponentiation). Samples of integers can be obtained, displayed as tables (aligning same residues in same columns) and possibly transforming the elements by user-defined functions. Several fundamental results of number theory can be easily illustrated, like the sieve of Eratosthenes, Fermat's little theorem, Chinese remainder theorem and Dirichlet's theorem on arithmetic progressions.
 
-Modu is an open-source module distributed under the **MIT license**.
-
-Here are few examples.
+Thanks to Python's operator overloading, Modu allows expressing advanced operations in very few keystrokes, often as one-liners. Here are few examples.
 * integers having residue 0 modulo 2 (the even numbers):
 ```
 >>> from modu import O
@@ -42,10 +40,8 @@ True
 >>> O%2 | O%3 != O%6
 True
 ```
-Modu provides more functions for normalizing the representation, changing the display format or providing samples using table layout.
+Modu provides much more functions, like changing the display format or extracting / transforming samples using a table layout. Modu is best used as an interactive calculator in Python terminal sessions (REPL) or in Jupyter Notebooks with instantaneous LaTeX rendering. The prime target domain is research and education in **number theory**.
 
-All those features are demonstrated in an interactive tutorial, the **"_Modutorial_" Jupyter Notebook** (modutorial.ipynb). This can be opened directly online by clicking here (binder):
+All those features are demonstrated in an interactive tutorial, the **"_Modutorial_" Jupyter Notebook** (modutorial.ipynb). This can be opened directly online by clicking here (binder): [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/piedenis/Modu/HEAD?urlpath=%2Fdoc%2Ftree%2Fsrc%2Fmodutorial.ipynb) (be patient: you have to wait a bit...)
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/piedenis/Modu/HEAD?urlpath=%2Fdoc%2Ftree%2Fsrc%2Fmodutorial.ipynb)
-
-(be patient: you have to wait a bit...)
+Modu is an open-source module distributed under the **MIT license**.
